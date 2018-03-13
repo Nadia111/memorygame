@@ -25,41 +25,41 @@ function shuffle(array) {
     return array;
 }
 
-var m=0,
-    s=0;
+var m = 0,
+    s = 0;
 
-function calculate_time (){
+function calculate_time() {
 
     "use strict";
     var time = document.getElementById('time'),
-        i=0,
+        i = 0,
         sec,
         min;
 
-    function write(s,m){
-        sec = (s<10)? "0"+s : s;
-        min = (m<10)? "0"+m : m;
-        time.textContent=min+ ":" +sec;
+    function write(s, m) {
+        sec = (s < 10) ? "0" + s : s;
+        min = (m < 10) ? "0" + m : m;
+        time.textContent = min + ":" + sec;
     }
 
-    
-        
-        write(s,m);
-    
-    
-   
-        if (s < 59){
-            
-            s += 1;
-        }
-         
-        if (s===59){
 
-            s = 0;
-            m += 1;
-        }
-        
-       
+
+    write(s, m);
+
+
+
+    if (s < 59) {
+
+        s += 1;
+    }
+
+    if (s === 59) {
+
+        s = 0;
+        m += 1;
+    }
+
+
 }
 
 setInterval(calculate_time, 1000);
