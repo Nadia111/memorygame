@@ -34,14 +34,31 @@ let i = 0,
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+function show_symbol() {
+        this.classList.toggle("open");
+        this.classList.toggle("show");
+        this.classList.toggle("closed");
+}
+var list_open = [];
+function add_opencard() {
+            if (this.classList.contains("open")){
+            list_open.push(this);
+        }
+        else {
+            list_open.pop();
+            console.log('nono');
+            list_open.pop();
+            console.log('nono');
+        }
+    
+}
+
 
 
 for(i = 0; i < 16; i += 1){
     card = cards[i];
-    card.addEventListener('click', function () {
-        this.classList.toggle("open");
-        this.classList.toggle("show");
-    });
+    card.addEventListener('click', show_symbol);
+    card.addEventListener('click', add_opencard);
 }
 
 var m = 0,
