@@ -1,18 +1,10 @@
-/*
- * Create a list that holds all of your cards
- */
-
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 // Shuffle function from http://stackoverflow.com/a/2450976
+
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+    let currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
 
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -25,6 +17,33 @@ function shuffle(array) {
     return array;
 }
 
+
+/*
+ * Create a list that holds all of your cards
+ */
+
+let i = 0,
+    card,
+    cards;
+    card = document.getElementsByClassName('card');
+    cards = [...card];
+    
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
+
+
+for(i = 0; i < 16; i += 1){
+    card = cards[i];
+    card.addEventListener('click', function () {
+        this.classList.toggle("open");
+        this.classList.toggle("show");
+    });
+}
+
 var m = 0,
     s = 0;
 
@@ -32,7 +51,6 @@ function calculate_time() {
 
     "use strict";
     var time = document.getElementById('time'),
-        i = 0,
         sec,
         min;
 
@@ -63,6 +81,12 @@ function calculate_time() {
 }
 
 setInterval(calculate_time, 1000);
+
+
+
+
+
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
