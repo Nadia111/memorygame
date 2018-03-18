@@ -18,50 +18,15 @@ function shuffle(array) {
 }
 
 
-/*
- * Create a list that holds all of your cards
- */
 
-let i = 0,
-    card,
-    cards;
-    card = document.getElementsByClassName('card');
-    cards = [...card];
-    
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
-function show_symbol() {
-        this.classList.toggle("open");
-        this.classList.toggle("show");
-        this.classList.toggle("closed");
-}
-var list_open = [];
-function add_opencard() {
-            if (this.classList.contains("open")){
-            list_open.push(this);
-        }
-        else {
-            list_open.pop();
-            console.log('nono');
-            list_open.pop();
-            console.log('nono');
-        }
-    
-}
 
-
-
-for(i = 0; i < 16; i += 1){
-    card = cards[i];
-    card.addEventListener('click', show_symbol);
-    card.addEventListener('click', add_opencard);
-}
-
-var m = 0,
+let m = 0,
     s = 0;
 
 function calculate_time() {
@@ -99,12 +64,74 @@ function calculate_time() {
 
 setInterval(calculate_time, 1000);
 
+/*
+ * Create a list that holds all of your cards
+ */
+
+let i = 0,
+    card,
+    cards;
+card = document.getElementsByClassName('card');
+cards = [...card];
+
+function flip(arg) {
+    arg.classList.toggle("closed");
+    arg.classList.toggle("open");
+}
 
 
 
 
+function match(arg) {
+    arg.classList.toggle("open");
+    arg.classList.toggle("match");
+}
+const list = [];
+let counter = 0;
+function display_counter(){
+        counter += 1;
+        document.querySelector(".moves").textContent = counter;
+}
+function game() {
+    
+    if ((this.classList.contains("closed")) && (list.length < 2)) {
+        flip(this);
+        list.push(this);
+        if (list.length === 1){
+            display_counter();
+            this.removeEventListener("click", game);
+        }
+        else if (list.length === 2){
+                 display_counter();
+            if (list[0].innerHTML === this.innerHTML){
+                setTimeout( function() {match(list[1]);
+                match(list[0]);
+                }, 1000);
+                list = [];
+            }
+            else {
+                setTimeout( function () {
+                flip(list[1]);
+                flip(list[0]);
+                }, 1000);
+                list = [];
 
+        }
+        
+        }
+        
+ 
+        
+        else {
+            this.removeEventListener("click", game);
+            list = [];
+            
+        }
 
+    }
+    
+
+}
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -115,3 +142,7 @@ setInterval(calculate_time, 1000);
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+for (const card of cards) {
+    card.addEventListener("click", game);
+    card.addEventListener("dblclick", game);
+}
