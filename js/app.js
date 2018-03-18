@@ -86,14 +86,16 @@ function match(arg) {
     arg.classList.toggle("open");
     arg.classList.toggle("match");
 }
-const list = [];
+const list = [],
+      list_matched = [];
 let counter = 0;
 function display_counter(){
-        counter += 1;
-        document.querySelector(".moves").textContent = counter;
+    counter += 1;
+    document.querySelector(".moves").textContent = counter;
 }
 function game() {
-    
+
+
     if ((this.classList.contains("closed")) && (list.length < 2)) {
         flip(this);
         list.push(this);
@@ -102,36 +104,46 @@ function game() {
             this.removeEventListener("click", game);
         }
         else if (list.length === 2){
-                 display_counter();
+            display_counter();
             if (list[0].innerHTML === this.innerHTML){
+                list_matched.push(list[0]);
+                list_matched.push(this);
                 setTimeout( function() {match(list[1]);
-                match(list[0]);
-                }, 1000);
-                list = [];
+                                        match(list[0]);
+                                       }, 1000);
+                                            if (list_matched.length === 14){
+        
+        matched();
+                        
+    }
+
             }
             else {
                 setTimeout( function () {
-                flip(list[1]);
-                flip(list[0]);
+                    flip(list[1]);
+                    flip(list[0]);
                 }, 1000);
-                list = [];
 
-        }
-        
-        }
-        
- 
-        
-        else {
-            this.removeEventListener("click", game);
-            list = [];
-            
+
+            }
+            setTimeout( function () {
+                list.pop();
+                list.pop();
+            }, 1000);
+
         }
 
     }
     
 
+
 }
+
+function matched() {
+
+    alert("you won");
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -145,4 +157,5 @@ function game() {
 for (const card of cards) {
     card.addEventListener("click", game);
     card.addEventListener("dblclick", game);
+
 }
