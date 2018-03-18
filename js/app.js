@@ -92,6 +92,7 @@ let counter = 0;
 function display_counter(){
     counter += 1;
     document.querySelector(".moves").textContent = counter;
+
 }
 function game() {
 
@@ -111,11 +112,11 @@ function game() {
                 setTimeout( function() {match(list[1]);
                                         match(list[0]);
                                        }, 1000);
-                                            if (list_matched.length === 14){
-        
-        matched();
-                        
-    }
+                if (list_matched.length === 16){
+
+                    matched();
+
+                }
 
             }
             else {
@@ -134,8 +135,14 @@ function game() {
         }
 
     }
-    
 
+    stars = document.querySelectorAll(".fa-star");
+    if (counter > 20){
+      stars[2].remove();  
+    }
+    else if (counter > 28){
+        stars[1].remove();
+    }
 
 }
 
@@ -154,6 +161,10 @@ function matched() {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+
+
+
 for (const card of cards) {
     card.addEventListener("click", game);
     card.addEventListener("dblclick", game);
