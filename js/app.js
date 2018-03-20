@@ -28,24 +28,25 @@ function shuffle(array) {
 
 let m = 0,
     s = 0;
+let time = document.getElementById('time'),
+    sec,
+    min;
+
+function write(s, m) {
+    sec = (s < 10) ? "0" + s : s;
+    min = (m < 10) ? "0" + m : m;
+    time.textContent = min + ":" + sec;
+}
+
+
+
+write(s, m);
 
 function calculate_time() {
 
     "use strict";
-    var time = document.getElementById('time'),
-        sec,
-        min;
-
-    function write(s, m) {
-        sec = (s < 10) ? "0" + s : s;
-        min = (m < 10) ? "0" + m : m;
-        time.textContent = min + ":" + sec;
-    }
-
-
 
     write(s, m);
-
 
 
     if (s < 59) {
@@ -60,15 +61,18 @@ function calculate_time() {
     }
 
 
+    setTimeout(calculate_time, 1000);
+
 }
 
-setInterval(calculate_time, 1000);
+
 
 /*
  * Create a list that holds all of your cards
  */
 
 let i = 0,
+    gamestart = false,
     card,
     cards;
 card = document.getElementsByClassName('card');
@@ -79,13 +83,22 @@ function flip(arg) {
     arg.classList.toggle("open");
 }
 
-
+function close_matched(arg) {
+    arg.classList.toggle("closed");
+    arg.classList.toggle("match");    
+}
 
 
 function match(arg) {
     arg.classList.toggle("open");
     arg.classList.toggle("match");
 }
+
+function clear() {
+    var Id = setTimeout(calculate_time, 1000);
+    clearTimeout(Id);
+}
+
 const list = [],
       list_matched = [];
 let counter = 0;
@@ -94,18 +107,27 @@ function display_counter(){
     document.querySelector(".moves").textContent = counter;
 
 }
+
+
+
+
 function game() {
 
 
     if ((this.classList.contains("closed")) && (list.length < 2)) {
         flip(this);
+        display_counter();
+        if (gamestart === false) {
+            setTimeout(calculate_time, 1000);
+            gamestart = true;
+        }
         list.push(this);
         if (list.length === 1){
-            display_counter();
+
             this.removeEventListener("click", game);
         }
         else if (list.length === 2){
-            display_counter();
+
             if (list[0].innerHTML === this.innerHTML){
                 list_matched.push(list[0]);
                 list_matched.push(this);
@@ -138,7 +160,7 @@ function game() {
 
     stars = document.querySelectorAll(".fa-star");
     if (counter > 20){
-      stars[2].remove();  
+        stars[2].remove();  
     }
     else if (counter > 28){
         stars[1].remove();
@@ -147,8 +169,29 @@ function game() {
 }
 
 function matched() {
-
+    setTimeout(write(s, m), 0);
     alert("you won");
+    restart();
+}
+
+
+
+function restart() {
+    list.splice(0, list.length);
+    list_matched.splice(0, list_matched.length);
+    counter = 0;
+    Id = setTimeout(calculate_time, 1000);;
+    clearTimeout(Id);
+    document.querySelector(".moves").textContent = 0;
+    for (i = 0; i < 16 ; i += 1){
+        cards[i].classList.add("closed");
+        cards[i].classList.remove("open");
+        cards[i].classList.remove("match");
+
+    }
+    s = 0;
+    m = 0;
+    write(s, m);
 }
 
 /*
@@ -170,3 +213,7 @@ for (const card of cards) {
     card.addEventListener("dblclick", game);
 
 }
+
+const repeat = document.querySelector(".fa-repeat");
+
+repeat.addEventListener("click", restart);
