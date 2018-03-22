@@ -1,6 +1,4 @@
-
 // Shuffle function from http://stackoverflow.com/a/2450976
-
 function shuffle(array) {
     let currentIndex = array.length,
         temporaryValue,
@@ -17,14 +15,6 @@ function shuffle(array) {
     return array;
 }
 
-
-
-/*
- * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
- *   - loop through each card and create its HTML
- *   - add each card's HTML to the page
- */
 
 let m = 0,
     s = 0;
@@ -73,10 +63,27 @@ function calculate_time() {
 
 let i = 0,
     gamestart = false,
+    redo = false,
     card,
     cards;
 card = document.getElementsByClassName('card');
 cards = [...card];
+
+shuffle(cards);
+
+for (i = 0; i < 16; i += 1){
+    HTML = document.createElement("li");
+    HTML.outerHTML = cards[i];
+    document.querySelector(".deck").appendChild(HTML);
+    document.querySelector(".deck").replaceChild(card[i], HTML);
+}
+
+
+    var Id = setTimeout(calculate_time, 1000);
+    if (redo === false){
+
+    clearTimeout(Id);
+    }
 
 function flip(arg) {
     arg.classList.toggle("closed");
@@ -94,13 +101,9 @@ function match(arg) {
     arg.classList.toggle("match");
 }
 
-function clear() {
-    var Id = setTimeout(calculate_time, 1000);
-    clearTimeout(Id);
-}
 
-const list = [],
-      list_matched = [];
+let list = [],
+    list_matched = [];
 let counter = 0;
 function display_counter(){
     counter += 1;
@@ -108,7 +111,8 @@ function display_counter(){
 
 }
 
-
+var audio1 = new Audio('../error.mp3');
+audio1.loop = true;
 
 
 function game() {
@@ -116,29 +120,41 @@ function game() {
 
     if ((this.classList.contains("closed")) && (list.length < 2)) {
         flip(this);
-        display_counter();
-        if (gamestart === false) {
+        redo = true;
+        if (gamestart === false && redo === true) {
             setTimeout(calculate_time, 1000);
             gamestart = true;
         }
         list.push(this);
+        display_counter();
+
+
         if (list.length === 1){
 
             this.removeEventListener("click", game);
         }
-        else if (list.length === 2){
 
-            if (list[0].innerHTML === this.innerHTML){
-                list_matched.push(list[0]);
-                list_matched.push(this);
-                setTimeout( function() {match(list[1]);
-                                        match(list[0]);
-                                       }, 1000);
+        else if (list.length === 2){
+            
+
+            if (list[0].firstElementChild.classList.item(1) === this.firstElementChild.classList.item(1)){
+                
+                    list_matched.push(list[0]);                
+                    list_matched.push(this);
+
+
+                    setTimeout( function() {
+                        match(list[0]);
+                        match(list[1]); }, 1000);
+
                 if (list_matched.length === 16){
 
                     matched();
 
                 }
+
+
+
 
             }
             else {
@@ -147,27 +163,34 @@ function game() {
                     flip(list[0]);
                 }, 1000);
 
+                this.addEventListener("click", function() {
+                    audio1.play();});
+
 
             }
             setTimeout( function () {
                 list.pop();
                 list.pop();
-            }, 1000);
+            }, 1001);
 
         }
 
     }
 
-    stars = document.querySelectorAll(".fa-star");
-    if (counter > 20){
-        stars[2].remove();  
-    }
-    else if (counter > 28){
-        stars[1].remove();
-    }
+delstars();
 
 }
 
+    stars = document.querySelectorAll(".fa-star");
+
+function delstars() {
+        if (counter > 2){
+        stars[2].remove();  
+    }
+    if (counter > 28){
+        stars[1].remove();
+    }
+}
 function matched() {
     setTimeout(write(s, m), 0);
     alert("you won");
@@ -180,8 +203,11 @@ function restart() {
     list.splice(0, list.length);
     list_matched.splice(0, list_matched.length);
     counter = 0;
-    Id = setTimeout(calculate_time, 1000);;
+    redo = false;
+    console.log(stars);
+
     clearTimeout(Id);
+
     document.querySelector(".moves").textContent = 0;
     for (i = 0; i < 16 ; i += 1){
         cards[i].classList.add("closed");
@@ -208,9 +234,9 @@ function restart() {
 
 
 
-for (const card of cards) {
-    card.addEventListener("click", game);
-    card.addEventListener("dblclick", game);
+for (const cart of cards) {
+    cart.addEventListener("click", game);
+    cart.addEventListener("dblclick", game);
 
 }
 
