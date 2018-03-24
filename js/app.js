@@ -17,6 +17,7 @@ function shuffle(array) {
 
 
 let m = 0,
+    timer,
     s = 0;
 let time = document.getElementById('time'),
     sec,
@@ -28,11 +29,9 @@ function write(s, m) {
     time.textContent = min + ":" + sec;
 }
 
-
-
 write(s, m);
-
-function calculate_time() {
+var timer_function = function (){
+timer = setInterval( function () {
 
     "use strict";
 
@@ -50,10 +49,14 @@ function calculate_time() {
         m += 1;
     }
 
-
-    setTimeout(calculate_time, 1000);
-
 }
+    , 1000);
+    
+
+    
+
+
+};
 
 
 
@@ -73,17 +76,11 @@ shuffle(cards);
 
 for (i = 0; i < 16; i += 1){
     HTML = document.createElement("li");
-    HTML.outerHTML = cards[i];
+    HTML.innerHTML = cards[i].innerHTML;
     document.querySelector(".deck").appendChild(HTML);
     document.querySelector(".deck").replaceChild(card[i], HTML);
 }
 
-
-    var Id = setTimeout(calculate_time, 1000);
-    if (redo === false){
-
-    clearTimeout(Id);
-    }
 
 function flip(arg) {
     arg.classList.toggle("closed");
@@ -101,9 +98,19 @@ function match(arg) {
     arg.classList.toggle("match");
 }
 
+function error(arg) {
+    arg.classList.toggle("open");
+    arg.classList.toggle("error");
+}
+
+function flip_error(arg) {
+    arg.classList.toggle("error");    
+    arg.classList.toggle("closed");
+    
+}
 
 let list = [],
-    list_matched = [];
+    counter_matched = 0;
 let counter = 0;
 function display_counter(){
     counter += 1;
@@ -111,8 +118,8 @@ function display_counter(){
 
 }
 
-var audio1 = new Audio('../error.mp3');
-audio1.loop = true;
+var audio = new Audio('../yes.mp3');
+
 
 
 function game() {
@@ -120,10 +127,10 @@ function game() {
 
     if ((this.classList.contains("closed")) && (list.length < 2)) {
         flip(this);
-        redo = true;
-        if (gamestart === false && redo === true) {
-            setTimeout(calculate_time, 1000);
+        if (gamestart === false || redo === true) {
+            timer_function();
             gamestart = true;
+            redo = false;
         }
         list.push(this);
         display_counter();
@@ -135,20 +142,20 @@ function game() {
         }
 
         else if (list.length === 2){
-            
+
 
             if (list[0].firstElementChild.classList.item(1) === this.firstElementChild.classList.item(1)){
-                
-                    list_matched.push(list[0]);                
-                    list_matched.push(this);
+
+                counter_matched += 1;                
 
 
-                    setTimeout( function() {
-                        match(list[0]);
-                        match(list[1]); }, 1000);
 
-                if (list_matched.length === 16){
+                setTimeout( function() {
+                    match(list[0]);
+                    match(list[1]); }, 1000);
 
+                if (counter_matched === 8){
+                    audio.play();
                     matched();
 
                 }
@@ -159,32 +166,32 @@ function game() {
             }
             else {
                 setTimeout( function () {
-                    flip(list[1]);
-                    flip(list[0]);
+                    error(list[1]);
+                    error(list[0]);
                 }, 1000);
-
-                this.addEventListener("click", function() {
-                    audio1.play();});
-
+                setTimeout( function () {
+                    flip_error(list[1]);
+                    flip_error(list[0]);
+                }, 2000);
 
             }
             setTimeout( function () {
                 list.pop();
                 list.pop();
-            }, 1001);
+            }, 2001);
 
         }
 
     }
 
-delstars();
+    delstars();
 
 }
-
-    stars = document.querySelectorAll(".fa-star");
+let panel_stars = document.querySelector(".stars").innerHTML,
+stars = document.querySelectorAll(".fa-star");
 
 function delstars() {
-        if (counter > 2){
+    if (counter > 2){
         stars[2].remove();  
     }
     if (counter > 28){
@@ -193,7 +200,8 @@ function delstars() {
 }
 function matched() {
     setTimeout(write(s, m), 0);
-    alert("you won");
+    clearInterval(timer);
+    console.log("you won");
     restart();
 }
 
@@ -201,13 +209,13 @@ function matched() {
 
 function restart() {
     list.splice(0, list.length);
-    list_matched.splice(0, list_matched.length);
+    counter_matched = 0;
     counter = 0;
-    redo = false;
-    console.log(stars);
-
-    clearTimeout(Id);
-
+    document.querySelector(".stars").innerHTML = panel_stars;
+if (redo === false){
+    clearInterval(timer);
+    redo = true;
+}
     document.querySelector(".moves").textContent = 0;
     for (i = 0; i < 16 ; i += 1){
         cards[i].classList.add("closed");

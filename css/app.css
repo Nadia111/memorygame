@@ -29,8 +29,9 @@ body {
 }
 
 h1 {
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
+    font-family: 'Dosis', sans-serif;
+    font-weight: 1000;
+    font-size: 45px;
 }
 
 /*
@@ -83,10 +84,30 @@ h1 {
 
 .deck .card.match {
     cursor: default;
-    background: #02ccba;
+    background: rgb(197, 179, 88);
     font-size: 33px;
+    animation: popout 1s ease;
+    -webkit-animation: popout 1s ease;
 }
 
+.deck .card.error {
+    cursor: default;
+    background: rgb(255, 0, 0);
+    font-size: 33px;
+    animation: popout 1s ease;
+    -webkit-animation: popout 1s ease;
+}
+
+@keyframes popout {
+    from{transform:scale(0)}
+    80%{transform:scale(1.2)}
+    to{transform:scale(1)}
+}
+@-webkit-keyframes popout {
+    from{-webkit-transform:scale(0)}
+    80%{-webkit-transform:scale(1.2)}
+    to{-webkit-transform:scale(1)}
+}
 /*
  * Styles for the Score Panel
  */
