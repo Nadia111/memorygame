@@ -1,3 +1,31 @@
+const repeat = document.querySelector(".fa-repeat"),
+      time = document.getElementById("time"),
+      moves = document.querySelector(".moves"),
+      popup = document.querySelector(".popup"),
+      panel_stars = document.querySelector(".stars").innerHTML,
+      score_moves = document.querySelector(".score_moves"),
+      score_time = document.querySelector(".score_time"),
+      card = document.getElementsByClassName("card"),
+      Replay = document.querySelector(".Replay");
+
+let m = 0,
+    s = 0,
+    sec,
+    min,
+    i = 0,
+    gamestart = false,
+    redo = false,
+    cards = [...card],
+    timer,
+    list = [],
+    counter_matched = 0,
+    counter = 0,
+    card_initial = [],
+    score_stars = document.querySelector(".score_stars"),
+    stars = document.querySelectorAll(".fa-star"),
+    card2 = document.querySelectorAll(".card");
+
+
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     let currentIndex = array.length,
@@ -15,13 +43,19 @@ function shuffle(array) {
     return array;
 }
 
+function init() {   // to shuffle cards of the list, then remove the old order and set the new one by manipulating the DOM
 
-let m = 0,
-    timer,
-    s = 0;
-let time = document.getElementById('time'),
-    sec,
-    min;
+    let shuffled = shuffle(cards),
+        deck = document.querySelector(".deck"),
+        new_card;
+    for (i = 0; i < 16; i += 1){
+        new_card[i] = document.createElement("li");
+        deck.appendChild(new_card[i]) ;
+        new_card[i].outerHTML = shuffled[i].outerHTML;
+        deck.replaceChild(new_card[i], card2[i]);
+    }
+}
+
 
 function write(s, m) {
     sec = (s < 10) ? "0" + s : s;
@@ -30,56 +64,28 @@ function write(s, m) {
 }
 
 write(s, m);
-var timer_function = function (){
-timer = setInterval( function () {
-
-    "use strict";
-
-    write(s, m);
 
 
-    if (s < 59) {
+let timer_function = function (){
 
-        s += 1;
+    timer = setInterval( function () {
+        "use strict";
+
+        if (s < 59) {
+
+            s += 1;
+        }
+
+        if (s === 59) {
+
+            s = 0;
+            m += 1;
+        }
+        write(s, m);
     }
-
-    if (s === 59) {
-
-        s = 0;
-        m += 1;
-    }
-
-}
-    , 1000);
-    
-
-    
-
+                        , 1000);
 
 };
-
-
-
-/*
- * Create a list that holds all of your cards
- */
-
-let i = 0,
-    gamestart = false,
-    redo = false,
-    card,
-    cards;
-card = document.getElementsByClassName('card');
-cards = [...card];
-
-shuffle(cards);
-
-for (i = 0; i < 16; i += 1){
-    HTML = document.createElement("li");
-    HTML.innerHTML = cards[i].innerHTML;
-    document.querySelector(".deck").appendChild(HTML);
-    document.querySelector(".deck").replaceChild(card[i], HTML);
-}
 
 
 function flip(arg) {
@@ -89,7 +95,7 @@ function flip(arg) {
 
 function close_matched(arg) {
     arg.classList.toggle("closed");
-    arg.classList.toggle("match");    
+    arg.classList.toggle("match"); 
 }
 
 
@@ -104,57 +110,46 @@ function error(arg) {
 }
 
 function flip_error(arg) {
-    arg.classList.toggle("error");    
-    arg.classList.toggle("closed");
-    
+    arg.classList.toggle("error");  
+    arg.classList.toggle("closed"); 
 }
 
-let list = [],
-    counter_matched = 0;
-let counter = 0;
+
 function display_counter(){
     counter += 1;
-    document.querySelector(".moves").textContent = counter;
-
+    moves.textContent = counter;
 }
-
-var audio = new Audio('../yes.mp3');
-
-
 
 function game() {
 
-
-    if ((this.classList.contains("closed")) && (list.length < 2)) {
-        flip(this);
+    if ((this.classList.contains("closed")) && (list.length < 2)) {//when we click on a closed card & when we compare it to only one other card
+        flip(this); //open the card
         if (gamestart === false || redo === true) {
-            timer_function();
+            timer_function(); //if it is the first card to be clicked (we just started the game) : start the timer
             gamestart = true;
-            redo = false;
+            redo = false; // in case we have clicked the restart button this variable is to disable the clearInterval function (enable the timer) 
         }
-        list.push(this);
+        list.push(this); //we add the card to the list of open cards
         display_counter();
 
 
-        if (list.length === 1){
+        if (list.length === 1){ //if there is only one open card : we don't want it to flip if we click it again
 
             this.removeEventListener("click", game);
         }
 
-        else if (list.length === 2){
-
+        else if (list.length === 2){ //if there are two open cards we compare their symbols
 
             if (list[0].firstElementChild.classList.item(1) === this.firstElementChild.classList.item(1)){
 
-                counter_matched += 1;                
-
-
+                counter_matched += 1;
 
                 setTimeout( function() {
                     match(list[0]);
                     match(list[1]); }, 1000);
 
-                if (counter_matched === 8){
+                if (counter_matched === 8){ //if the game is won we play a sound and pop-up the modal
+                    let audio = new Audio("yes.mp3");
                     audio.play();
                     matched();
 
@@ -164,7 +159,7 @@ function game() {
 
 
             }
-            else {
+            else { //if the two open cards do not match
                 setTimeout( function () {
                     error(list[1]);
                     error(list[0]);
@@ -175,7 +170,7 @@ function game() {
                 }, 2000);
 
             }
-            setTimeout( function () {
+            setTimeout( function () { //in both cases finally: we clear the list of open cards
                 list.pop();
                 list.pop();
             }, 2001);
@@ -187,12 +182,10 @@ function game() {
     delstars();
 
 }
-let panel_stars = document.querySelector(".stars").innerHTML,
-stars = document.querySelectorAll(".fa-star");
 
 function delstars() {
-    if (counter > 2){
-        stars[2].remove();  
+    if (counter > 20){
+        stars[2].remove();
     }
     if (counter > 28){
         stars[1].remove();
@@ -201,53 +194,42 @@ function delstars() {
 function matched() {
     setTimeout(write(s, m), 0);
     clearInterval(timer);
-    console.log("you won");
-    restart();
+    popup.classList.remove("hidden");
+    score_moves.textContent = counter+"  ";
+    score_stars.innerHTML = document.querySelector(".stars").innerHTML;
+    score_time.textContent = "  "+time.textContent;
+    Replay.addEventListener("click", restart);
 }
 
 
 
 function restart() {
+    popup.classList.add("hidden");
     list.splice(0, list.length);
     counter_matched = 0;
     counter = 0;
     document.querySelector(".stars").innerHTML = panel_stars;
-if (redo === false){
-    clearInterval(timer);
-    redo = true;
-}
-    document.querySelector(".moves").textContent = 0;
-    for (i = 0; i < 16 ; i += 1){
+    if (redo === false){
+        clearInterval(timer);
+        redo = true;
+    }
+    moves.textContent = 0;
+    for (i = 0; i < 16 ; i += 1) {
         cards[i].classList.add("closed");
         cards[i].classList.remove("open");
         cards[i].classList.remove("match");
-
     }
     s = 0;
     m = 0;
     write(s, m);
+    init();
 }
-
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
-
 
 
 
 for (const cart of cards) {
     cart.addEventListener("click", game);
     cart.addEventListener("dblclick", game);
-
 }
-
-const repeat = document.querySelector(".fa-repeat");
 
 repeat.addEventListener("click", restart);

@@ -2,19 +2,20 @@
 
 ## Table of Contents
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+* [Game Overview](#Game Overview)
+* [How to play](#How to play)
 
-## Instructions
+## Game Overview
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+ This is a 'Udacity FEND' Project.
+ 
+ Memory Game is a game that tests your memory by testing how fast you learn the order of cards.
+ There is a set of sixteen cards (eight pairs), randomly placed in a container, you try to open two similar cards.
+ In the process if the pair of cards you open do match, they are left open, and if they don't, they are flipped over.
+ You win the game when they all match.
+ There is a counter of moves, stars' levels and a timer to measure how fast you do.
+ 
 
-To get started, open `js/app.js` and start building out the app's functionality
+## How to play
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
-
-## Contributing
-
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
-
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+To play this game click on [This link here](https://Nadia111.github.io/memorygame).
