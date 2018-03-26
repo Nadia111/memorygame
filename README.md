@@ -1,9 +1,5 @@
 # Memory Game Project
 
-## Table of Contents
-
-* [Game Overview](#Game Overview)
-* [How to play](#How to play)
 
 ## Game Overview
 
