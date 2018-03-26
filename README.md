@@ -14,4 +14,4 @@
 
 ## How to play
 
-To play this game click on [This link here](https://Nadia111.github.io/memorygame).
+To play this game click on [This link here](http://htmlpreview.github.io/?https://github.com/Nadia111/memorygame/blob/master/index.html).
