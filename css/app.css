@@ -149,7 +149,7 @@ h1 {
 
 div.popup {
     text-align: center;
-    position: fixed;
+    position: absolute;
     z-index: 1;
     background-color: rgba(0,0,0,0.3);
     width: 450px;
@@ -179,4 +179,13 @@ button.Replay {
     display: flex;
     position:relative;
     left:47%;
+}
+
+@media screen and (min-width: 1025px) {
+    div.popup {
+        width: 35%;
+        height: 25%;
+        top: 25%;
+    }
+    
 }
