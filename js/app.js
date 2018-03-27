@@ -47,13 +47,15 @@ function init() {   // to shuffle cards of the list, then remove the old order a
 
     let shuffled = shuffle(cards),
         deck = document.querySelector(".deck"),
-        new_card;
-    for (i = 0; i < 16; i += 1){
-        new_card[i] = document.createElement("li");
-        deck.appendChild(new_card[i]) ;
-        new_card[i].outerHTML = shuffled[i].outerHTML;
-        deck.replaceChild(new_card[i], card2[i]);
-    }
+        new_card,
+        div,
+        HTML = "";
+        deck.innerHTML = "";
+        for (i = 0; i < 16; i += 1) {
+            div = '<li class="card closed">'+shuffled[i].innerHTML+'</li>';
+            HTML = HTML.concat(div);
+        }
+        deck.innerHTML = HTML;
 }
 
 
