@@ -5,7 +5,7 @@ const repeat = document.querySelector(".fa-repeat"),
       panel_stars = document.querySelector(".stars").innerHTML,
       score_moves = document.querySelector(".score_moves"),
       score_time = document.querySelector(".score_time"),
-      card = document.getElementsByClassName("card"),
+      deck = document.querySelector(".deck"),      
       Replay = document.querySelector(".Replay");
 
 let m = 0,
@@ -15,16 +15,15 @@ let m = 0,
     i = 0,
     gamestart = false,
     redo = false,
-    cards = [...card],
+    card = document.getElementsByClassName("card"),
+    cards = [...card],    
     timer,
+    start = false,
     list = [],
     counter_matched = 0,
     counter = 0,
-    card_initial = [],
     score_stars = document.querySelector(".score_stars"),
-    stars = document.querySelectorAll(".fa-star"),
-    card2 = document.querySelectorAll(".card");
-
+    stars = document.querySelectorAll(".fa-star");
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -43,19 +42,20 @@ function shuffle(array) {
     return array;
 }
 
-function init() {   // to shuffle cards of the list, then remove the old order and set the new one by manipulating the DOM
 
-    let shuffled = shuffle(cards),
-        deck = document.querySelector(".deck"),
-        new_card,
-        div,
+
+function init() {   // to shuffle cards of the list, then remove the old order and set the new one by manipulating the DOM
+    let div = "",
         HTML = "";
-        deck.innerHTML = "";
-        for (i = 0; i < 16; i += 1) {
-            div = '<li class="card closed">'+shuffled[i].innerHTML+'</li>';
-            HTML = HTML.concat(div);
-        }
-        deck.innerHTML = HTML;
+    deck.innerHTML = "";
+    cards = shuffle(cards);
+    for (i = 0; i < 16; i += 1) {
+        div = cards[i].outerHTML;
+        HTML = HTML.concat(div);
+    }
+    deck.innerHTML = HTML;
+    card = document.getElementsByClassName("card");
+    cards = [...card];
 }
 
 
@@ -66,7 +66,7 @@ function write(s, m) {
 }
 
 write(s, m);
-
+moves.textContent = counter;
 
 let timer_function = function (){
 
@@ -97,7 +97,7 @@ function flip(arg) {
 
 function close_matched(arg) {
     arg.classList.toggle("closed");
-    arg.classList.toggle("match"); 
+    arg.classList.toggle("match");
 }
 
 
@@ -112,8 +112,8 @@ function error(arg) {
 }
 
 function flip_error(arg) {
-    arg.classList.toggle("error");  
-    arg.classList.toggle("closed"); 
+    arg.classList.toggle("error");
+    arg.classList.toggle("closed");
 }
 
 
@@ -129,7 +129,7 @@ function game() {
         if (gamestart === false || redo === true) {
             timer_function(); //if it is the first card to be clicked (we just started the game) : start the timer
             gamestart = true;
-            redo = false; // in case we have clicked the restart button this variable is to disable the clearInterval function (enable the timer) 
+            redo = false; // in case we have clicked the restart button this variable is to disable the clearInterval function (enable the timer)
         }
         list.push(this); //we add the card to the list of open cards
         display_counter();
@@ -154,10 +154,8 @@ function game() {
                     let audio = new Audio("yes.mp3");
                     audio.play();
                     matched();
-
+                    init();
                 }
-
-
 
 
             }
@@ -193,6 +191,7 @@ function delstars() {
         stars[1].remove();
     }
 }
+
 function matched() {
     setTimeout(write(s, m), 0);
     clearInterval(timer);
@@ -202,7 +201,6 @@ function matched() {
     score_time.textContent = "  "+time.textContent;
     Replay.addEventListener("click", restart);
 }
-
 
 
 function restart() {
@@ -215,23 +213,22 @@ function restart() {
         clearInterval(timer);
         redo = true;
     }
-    moves.textContent = 0;
-    for (i = 0; i < 16 ; i += 1) {
-        cards[i].classList.add("closed");
+    for(i = 0; i < 16; i += 1) {
         cards[i].classList.remove("open");
         cards[i].classList.remove("match");
+        cards[i].classList.add("closed");
     }
+    moves.textContent = 0;
     s = 0;
     m = 0;
     write(s, m);
-    init();
 }
 
-
-
-for (const cart of cards) {
-    cart.addEventListener("click", game);
-    cart.addEventListener("dblclick", game);
-}
-
+init();
 repeat.addEventListener("click", restart);
+repeat.addEventListener("click", init);
+
+for (const card of cards) {
+    card.addEventListener("click", game);
+    card.addEventListener("dblclick", game);
+}
