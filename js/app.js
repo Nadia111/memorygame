@@ -4,8 +4,7 @@ const repeat = document.querySelector(".fa-repeat"),
       popup = document.querySelector(".popup"),
       panel_stars = document.querySelector(".stars").innerHTML,
       score_moves = document.querySelector(".score_moves"),
-      score_time = document.querySelector(".score_time"),
-      deck = document.querySelector(".deck"),      
+      score_time = document.querySelector(".score_time"),      
       Replay = document.querySelector(".Replay");
 
 let m = 0,
@@ -16,6 +15,7 @@ let m = 0,
     gamestart = false,
     redo = false,
     card = document.getElementsByClassName("card"),
+    deck = document.querySelector(".deck"),
     cards = [...card],    
     timer,
     start = false,
@@ -56,6 +56,7 @@ function init() {   // to shuffle cards of the list, then remove the old order a
     deck.innerHTML = HTML;
     card = document.getElementsByClassName("card");
     cards = [...card];
+    play();
 }
 
 
@@ -125,23 +126,25 @@ function display_counter(){
 function game() {
 
     if ((this.classList.contains("closed")) && (list.length < 2)) {//when we click on a closed card & when we compare it to only one other card
-        flip(this); //open the card
+        
         if (gamestart === false || redo === true) {
             timer_function(); //if it is the first card to be clicked (we just started the game) : start the timer
             gamestart = true;
             redo = false; // in case we have clicked the restart button this variable is to disable the clearInterval function (enable the timer)
         }
-        list.push(this); //we add the card to the list of open cards
+        
         display_counter();
 
 
-        if (list.length === 1){ //if there is only one open card : we don't want it to flip if we click it again
-
-            this.removeEventListener("click", game);
+        if (list.length === 0){ //if there is only one open card : we don't want it to flip if we click it again
+            this.classList.add("open");//we want the card to stay open even if we click it again
+            this.classList.remove("closed");
+            list.push(this); //we add the card to the list of open cards
         }
 
-        else if (list.length === 2){ //if there are two open cards we compare their symbols
-
+        else if (list.length === 1){ //if there are two open cards we compare their symbols
+                flip(this); //open the card
+                list.push(this); //we add the card to the list of open cards
             if (list[0].firstElementChild.classList.item(1) === this.firstElementChild.classList.item(1)){
 
                 counter_matched += 1;
@@ -151,6 +154,8 @@ function game() {
                     match(list[1]); }, 1000);
 
                 if (counter_matched === 8){ //if the game is won we play a sound and pop-up the modal
+                    match(list[0]);
+                    match(list[1]);
                     let audio = new Audio("yes.mp3");
                     audio.play();
                     matched();
@@ -224,11 +229,15 @@ function restart() {
     write(s, m);
 }
 
-init();
 repeat.addEventListener("click", restart);
 repeat.addEventListener("click", init);
 
+init();
+
+function play() {
 for (const card of cards) {
     card.addEventListener("click", game);
     card.addEventListener("dblclick", game);
 }
+}
+play();
