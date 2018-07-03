@@ -154,7 +154,7 @@ div.popup {
     background-color: rgba(0,0,0,0.3);
     width: 450px;
     height: 450px;
-    padding-top: 25%;
+    top: 25%;
     font-family: 'Dosis', sans-serif;
     
 }
