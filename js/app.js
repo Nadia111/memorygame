@@ -205,11 +205,13 @@ function matched() {
     score_stars.innerHTML = document.querySelector(".stars").innerHTML;
     score_time.textContent = "  "+time.textContent;
     Replay.addEventListener("click", restart);
+    document.querySelector(".container").classList.add("transparent");
 }
 
 
 function restart() {
     popup.classList.add("hidden");
+    document.querySelector(".container").classList.remove("transparent");
     list.splice(0, list.length);
     counter_matched = 0;
     counter = 0;
