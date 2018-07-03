@@ -154,7 +154,7 @@ div.popup {
     background-color: rgba(0,0,0,0.3);
     width: 450px;
     height: 450px;
-    top: 25%;
+    padding-top: 50px;
     font-family: 'Dosis', sans-serif;
     
 }
@@ -192,7 +192,7 @@ button.Replay {
     div.popup {
         width: 35%;
         height: 25%;
-        top: 25%;
+        top: 15%;
     }
     
 }
