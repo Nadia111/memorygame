@@ -154,9 +154,15 @@ div.popup {
     background-color: rgba(0,0,0,0.3);
     width: 450px;
     height: 450px;
-    padding-top: 50px;
+    padding-top: 25%;
     font-family: 'Dosis', sans-serif;
     
+}
+
+.transparent {
+    visibility: visible;
+    background-color: rgba(0,0,0,0.3);
+    z-index: -1;
 }
 
 .hidden {
